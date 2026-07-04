@@ -53,7 +53,6 @@ const EXERCISES = {
 
 const DAYS = ["จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์", "เสาร์", "อาทิตย์"];
 const DAYS_SHORT = ["จ", "อ", "พ", "พฤ", "ศ", "ส", "อา"];
-const MOVE_CATEGORIES = ["ทั้งหมด", "อก", "หลัง", "ขา", "ไหล่&แขน", "แกนกลาง&คาร์ดิโอ", "ฟูลบอดี้"];
 
 const WEEKLY_PLAN = [
   { title: "อก & ไทรเซป (Push)", rest: false, exIds: ["pushup", "dbBenchPress", "shoulderPress", "tricepDip"] },
@@ -73,15 +72,6 @@ const MEALS_BY_DAY = [
   { breakfast: { name: "ข้าวต้มปลา", kcal: 310, protein: 24 }, lunch: { name: "ข้าวกล้อง เนื้อสันย่าง สลัดผัก", kcal: 540, protein: 42 }, dinner: { name: "ต้มจืดผักรวมหมูสับ + ข้าว", kcal: 400, protein: 30 }, snack: { name: "เต้าหู้ปั่นโปรตีน", kcal: 160, protein: 14 } },
   { breakfast: { name: "แพนเค้กโปรตีน + ผลไม้", kcal: 360, protein: 26 }, lunch: { name: "ข้าวหน้าไก่ย่าง สลัดผัก", kcal: 520, protein: 40 }, dinner: { name: "ยำวุ้นเส้นทะเล", kcal: 380, protein: 28 }, snack: { name: "ผลไม้รวมตามฤดูกาล", kcal: 150, protein: 3 } },
   { breakfast: { name: "ข้าวโอ๊ต + ผลไม้สด", kcal: 320, protein: 15 }, lunch: { name: "ข้าวแกงเขียวหวานไก่", kcal: 500, protein: 30 }, dinner: { name: "สุกี้น้ำทะเล", kcal: 420, protein: 32 }, snack: { name: "ช็อกโกแลตดำ + ถั่ว", kcal: 200, protein: 8 } },
-];
-
-const PR_EXERCISES = [
-  { id: "squat", trackWeight: true },
-  { id: "deadlift", trackWeight: true },
-  { id: "dbBenchPress", trackWeight: true },
-  { id: "shoulderPress", trackWeight: true },
-  { id: "bentRow", trackWeight: true },
-  { id: "pushup", trackWeight: false },
 ];
 
 const app = document.querySelector("#app");
@@ -119,7 +109,6 @@ function defaultState() {
     tab: "home",
     day: todayIndex(),
     planLocation: "home",
-    moveFilter: "ทั้งหมด",
     selectedExId: null,
     completed: {},
     weightLog: [
@@ -128,14 +117,6 @@ function defaultState() {
       { label: "2 สัปดาห์ก่อน", weight: 72 },
       { label: "สัปดาห์ก่อน", weight: 71 },
     ],
-    prRecords: {
-      squat: { weight: 20, reps: 12 },
-      deadlift: { weight: 20, reps: 8 },
-      dbBenchPress: { weight: 10, reps: 10 },
-      shoulderPress: { weight: 8, reps: 10 },
-      bentRow: { weight: 10, reps: 10 },
-      pushup: { weight: 0, reps: 15 },
-    },
   };
 }
 
@@ -154,10 +135,8 @@ function loadState() {
 
 let state = loadState();
 
-function persistState() {
-  if (state.step !== "app") return;
-
-  const payload = {
+function buildBackupPayload() {
+  return {
     gender: state.gender,
     age: state.age,
     weight: state.weight,
@@ -166,11 +145,14 @@ function persistState() {
     planLocation: state.planLocation,
     completed: state.completed,
     weightLog: state.weightLog,
-    prRecords: state.prRecords,
   };
+}
+
+function persistState() {
+  if (state.step !== "app") return;
 
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(buildBackupPayload()));
   } catch {}
 }
 
@@ -216,10 +198,6 @@ function computeViewModel() {
   ];
   const mealTotalKcal = mealsForDay.reduce((sum, item) => sum + item.kcal, 0);
   const mealPct = Math.max(2, Math.min(100, (mealTotalKcal / tdee) * 100));
-
-  const filteredMoves = Object.entries(EXERCISES)
-    .filter(([, exercise]) => state.moveFilter === "ทั้งหมด" || exercise.muscle === state.moveFilter)
-    .map(([id, exercise]) => ({ id, ...exercise }));
 
   const weekMode = getSummaryMode();
   const weekDoneFlags = WEEKLY_PLAN.map((day, index) => {
@@ -267,7 +245,6 @@ function computeViewModel() {
     mealsForDay,
     mealTotalKcal,
     mealPct,
-    filteredMoves,
     weekDoneFlags,
     totalWorkoutDays,
     weekDoneCount,
@@ -396,7 +373,7 @@ function renderHome(view) {
         <div class="stat-card"><div class="stat-label">อายุ</div><div class="stat-value">${state.age} ปี</div></div>
         <div class="stat-card"><div class="stat-label">น้ำหนัก</div><div class="stat-value">${state.weight} กก.</div></div>
         <div class="stat-card"><div class="stat-label">ส่วนสูง</div><div class="stat-value">${state.height} ซม.</div></div>
-        <div class="stat-card"><div class="stat-label">แคลอรี่/วัน</div><div class="stat-value accent">${view.tdee}</div></div>
+        <div class="stat-card"><div class="stat-label">แคลอรี่/วัน (ห้ามเกิน)</div><div class="stat-value accent">${view.tdee}</div></div>
       </div>
 
       <button class="link-card card" data-action="set-tab" data-value="plan">
@@ -457,30 +434,31 @@ function renderPlan(view) {
   `;
 }
 
-function renderMoves(view) {
-  const filters = MOVE_CATEGORIES.map((item) => `
-    <button class="chip ${state.moveFilter === item ? "active" : ""}" data-action="set-move-filter" data-value="${item}">${escapeHtml(item)}</button>
-  `).join("");
-
-  const cards = view.filteredMoves.map((exercise) => `
-    <button class="list-card" data-action="open-exercise" data-value="${exercise.id}">
-      <div class="home-row">
-        <div class="list-title">${escapeHtml(exercise.name)}</div>
-        <div class="chevron">›</div>
-      </div>
-      <div class="exercise-subtext">${escapeHtml(exercise.muscle)} · ${escapeHtml(exercise.equip)}</div>
-      <div class="location-badges">
-        <div class="mini-badge" style="background:${exercise.locations.includes("home") ? "rgba(182,255,59,0.15)" : "#1E2227"};color:${exercise.locations.includes("home") ? "#B6FF3B" : "#5B636D"};">บ้าน</div>
-        <div class="mini-badge" style="background:${exercise.locations.includes("gym") ? "rgba(255,106,43,0.15)" : "#1E2227"};color:${exercise.locations.includes("gym") ? "#FF6A2B" : "#5B636D"};">ยิม</div>
-      </div>
-    </button>
-  `).join("");
+function renderActivity(view) {
+  const goalCount = view.currentDayExercises.length;
+  const goalLabel = goalCount ? `เป้าหมาย ${goalCount} ท่า` : "วันพักผ่อน";
 
   return `
     <div>
-      <h1 class="page-title" style="margin-bottom:14px;">คลังท่าออกกำลังกาย</h1>
-      <div class="pill-row">${filters}</div>
-      <div class="stack">${cards}</div>
+      <h1 class="page-title" style="margin-bottom:14px;">ภาพรวม</h1>
+      <div class="subtitle" style="margin-bottom:18px;">สรุปความคืบหน้าการออกกำลังกายของคุณ</div>
+
+      <div class="metric-card gradient card">
+        <div class="bmi-row">
+          <div>
+            <div class="eyebrow">ท่าออกกำลังกายวันนี้</div>
+            <div class="hero-number">${view.doneCount}</div>
+          </div>
+          <div class="badge" style="background:rgba(255,106,43,0.15);color:var(--accent);">${goalLabel}</div>
+        </div>
+        <div class="progress-track" style="margin-top:14px;"><div class="progress-fill" style="width:${view.progressPct}%"></div></div>
+        <div class="scale-row"><span>เสร็จแล้ว</span><span>${view.doneCount}/${goalCount} ท่า</span></div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-label">สตรีค</div><div class="stat-value accent">${view.streak} วัน</div></div>
+        <div class="stat-card"><div class="stat-label">สำเร็จสัปดาห์นี้</div><div class="stat-value">${view.weekDoneCount}/${view.totalWorkoutDays} วัน</div></div>
+      </div>
     </div>
   `;
 }
@@ -531,35 +509,6 @@ function renderProgress(view) {
 
   const labels = view.chartBars.map((bar) => `<div class="chart-label" style="flex:1;text-align:center;">${escapeHtml(bar.label)}</div>`).join("");
 
-  const prCards = PR_EXERCISES.map((item) => {
-    const record = state.prRecords[item.id] || { weight: 0, reps: 0 };
-    return `
-      <div class="pr-card card">
-        <div class="pr-name">${escapeHtml(EXERCISES[item.id].name)}</div>
-        <div class="pr-grid">
-          ${item.trackWeight ? `
-            <div class="pr-field">
-              <div class="pr-label">น้ำหนัก (กก.)</div>
-              <div class="stepper compact">
-                <button class="stepper-btn small" data-action="adjust-pr" data-id="${item.id}" data-field="weight" data-delta="-2.5">−</button>
-                <div class="stepper-value small">${record.weight} กก.</div>
-                <button class="stepper-btn small" data-action="adjust-pr" data-id="${item.id}" data-field="weight" data-delta="2.5">+</button>
-              </div>
-            </div>
-          ` : ""}
-          <div class="pr-field">
-            <div class="pr-label">Reps สูงสุด</div>
-            <div class="stepper compact">
-              <button class="stepper-btn small" data-action="adjust-pr" data-id="${item.id}" data-field="reps" data-delta="-1">−</button>
-              <div class="stepper-value small">${record.reps}</div>
-              <button class="stepper-btn small" data-action="adjust-pr" data-id="${item.id}" data-field="reps" data-delta="1">+</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    `;
-  }).join("");
-
   return `
     <div>
       <h1 class="page-title" style="margin-bottom:14px;">ผลลัพธ์ของคุณ</h1>
@@ -595,9 +544,6 @@ function renderProgress(view) {
         <div class="chart">${bars}</div>
         <div style="display:flex;gap:8px;">${labels}</div>
       </div>
-
-      <div class="pr-header">สถิติส่วนตัวต่อท่า</div>
-      <div class="stack">${prCards}</div>
     </div>
   `;
 }
@@ -627,11 +573,28 @@ function renderProfile(view) {
   `;
 }
 
+const TAB_ICON_PATHS = {
+  home: '<path d="M4 11.5 12 4l8 7.5" /><path d="M6 10v9a1 1 0 0 0 1 1h3v-6h4v6h3a1 1 0 0 0 1-1v-9" />',
+  plan: '<rect x="4" y="5" width="16" height="15" rx="2" /><path d="M8 3v4M16 3v4M4 10h16" />',
+  activity: '<path d="M12 21a9 9 0 1 1 9-9" /><path d="M12 12l4-4" /><circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none" />',
+  food: '<path d="M8 3v6a2 2 0 0 1-4 0V3M6 11v10M8 3v4M4 3v4" /><path d="M18 3c-2 0-3 2-3 5v3c0 1 .8 2 2 2v8" />',
+  progress: '<path d="M4 16l5-5 4 4 7-7" /><path d="M14 8h6v6" />',
+  profile: '<circle cx="12" cy="8" r="4" /><path d="M4.5 21a7.5 7.5 0 0 1 15 0" />',
+};
+
+function tabIconSvg(key) {
+  return `
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      ${TAB_ICON_PATHS[key] || ""}
+    </svg>
+  `;
+}
+
 function renderTabBar() {
   const tabs = [
     { key: "home", label: "หน้าแรก" },
     { key: "plan", label: "แผน" },
-    { key: "moves", label: "ท่า" },
+    { key: "activity", label: "ภาพรวม" },
     { key: "food", label: "อาหาร" },
     { key: "progress", label: "ผลลัพธ์" },
     { key: "profile", label: "โปรไฟล์" },
@@ -641,7 +604,7 @@ function renderTabBar() {
     <div class="tabs">
       ${tabs.map((tab) => `
         <button class="tab-btn ${state.tab === tab.key ? "active" : ""}" data-action="set-tab" data-value="${tab.key}">
-          <div class="tab-dot"></div>
+          <div class="tab-icon">${tabIconSvg(tab.key)}</div>
           <div class="tab-label">${tab.label}</div>
         </button>
       `).join("")}
@@ -681,7 +644,7 @@ function renderApp(view) {
   const pages = {
     home: renderHome(view),
     plan: renderPlan(view),
-    moves: renderMoves(view),
+    activity: renderActivity(view),
     food: renderFood(view),
     progress: renderProgress(view),
     profile: renderProfile(view),
@@ -753,9 +716,6 @@ document.addEventListener("click", (event) => {
     case "set-plan-location":
       setState({ planLocation: value });
       break;
-    case "set-move-filter":
-      setState({ moveFilter: value }, false);
-      break;
     case "open-exercise":
       setState({ selectedExId: value }, false);
       break;
@@ -772,14 +732,6 @@ document.addEventListener("click", (event) => {
         if (last?.label === "วันนี้") weightLog[weightLog.length - 1] = { label: "วันนี้", weight: current.weight };
         else weightLog.push({ label: "วันนี้", weight: current.weight });
         return { weightLog };
-      });
-      break;
-    case "adjust-pr":
-      setState((current) => {
-        const record = { ...(current.prRecords[id] || { weight: 0, reps: 0 }) };
-        if (field === "weight") record.weight = Math.max(0, Math.min(300, record.weight + Number(delta)));
-        if (field === "reps") record.reps = Math.max(0, Math.min(100, record.reps + Number(delta)));
-        return { prRecords: { ...current.prRecords, [id]: record } };
       });
       break;
     case "start-edit":
