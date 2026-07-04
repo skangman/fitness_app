@@ -872,3 +872,31 @@ button {
     min-height: 100vh;
   }
 }
+
+@media (display-mode: standalone) {
+  html,
+  body {
+    background: var(--bg);
+  }
+
+  .app-shell {
+    padding: 0;
+    background: var(--bg);
+  }
+
+  .device-frame {
+    width: 100%;
+    min-height: 100vh;
+    border-radius: 0;
+    border: 0;
+    box-shadow: none;
+  }
+
+  .device-island {
+    display: none;
+  }
+
+  .screen {
+    min-height: 100vh;
+  }
+}
