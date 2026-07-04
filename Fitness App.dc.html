@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+<template id="__bundler_thumbnail" data-bg-color="#0B0D10">
+  <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <rect x="20" y="90" width="20" height="20" rx="4" fill="#FF6A2B"/>
+    <rect x="10" y="80" width="14" height="40" rx="4" fill="#FF6A2B"/>
+    <rect x="160" y="90" width="20" height="20" rx="4" fill="#B6FF3B"/>
+    <rect x="176" y="80" width="14" height="40" rx="4" fill="#B6FF3B"/>
+    <rect x="40" y="96" width="120" height="8" rx="4" fill="#F5F6F7"/>
+  </svg>
+</template>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    ::-webkit-scrollbar { display: none; }
+  </style>
+</helmet>
+<div style="width:100%; min-height:100vh; display:flex; align-items:center; justify-content:center; background:#05060700; padding:40px 0;">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" dark="{{ true }}" hint-size="393,852">
+  <div style="height:100%; width:100%; display:flex; flex-direction:column; background:#0B0D10; color:#F5F6F7; font-family:'Inter',sans-serif; overflow:hidden; position:relative;">
+
+    <!-- ================= ONBOARDING ================= -->
+    <sc-if value="{{ isOnboarding }}" hint-placeholder-val="{{ true }}">
+      <div style="height:100%; display:flex; flex-direction:column; padding-top:64px;">
+
+        <!-- progress dots + back -->
+        <div style="display:flex; align-items:center; gap:10px; padding:0 24px; margin-bottom:8px;">
+          <div onClick="{{ goBack }}" style="{{ backBtnStyle }}">‹ ย้อนกลับ</div>
+        </div>
+        <div style="display:flex; gap:8px; padding:0 24px; margin-bottom:20px;">
+          <div style="{{ dotGenderStyle }}"></div>
+          <div style="{{ dotBodyStyle }}"></div>
+          <div style="{{ dotLocationStyle }}"></div>
+        </div>
+
+        <div style="flex:1; overflow:auto; padding:0 24px 24px;">
+
+          <sc-if value="{{ isGenderStep }}" hint-placeholder-val="{{ true }}">
+            <div style="font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:32px; line-height:1.1; margin-bottom:6px;">คุณคือใคร?</div>
+            <div style="color:#8B939E; font-size:14px; margin-bottom:22px;">เลือกเพศ/อัตลักษณ์ของคุณ เพื่อออกแบบโปรแกรมให้เหมาะสม</div>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+              <sc-for list="{{ genderOptions }}" as="g" hint-placeholder-count="6">
+                <div onClick="{{ g.onSelect }}" style="{{ g.cardStyle }}">
+                  <div style="font-size:16px; font-weight:600;">{{ g.label }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isBodyStep }}" hint-placeholder-val="{{ false }}">
+            <div style="font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:32px; line-height:1.1; margin-bottom:6px;">น้ำหนัก & ส่วนสูง</div>
+            <div style="color:#8B939E; font-size:14px; margin-bottom:22px;">ใช้คำนวณค่า BMI และแคลอรี่ที่แนะนำ</div>
+
+            <div style="background:#16191D; border:1px solid #262B31; border-radius:20px; padding:20px; margin-bottom:14px;">
+              <div style="color:#8B939E; font-size:13px; margin-bottom:10px; text-transform:uppercase; letter-spacing:0.06em;">อายุ (ปี)</div>
+              <div style="display:flex; align-items:center; justify-content:space-between;">
+                <div onClick="{{ decAge }}" style="width:48px; height:48px; border-radius:14px; background:#1E2227; display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:700; cursor:pointer;">−</div>
+                <div style="font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:44px;">{{ age }}</div>
+                <div onClick="{{ incAge }}" style="width:48px; height:48px; border-radius:14px; background:#1E2227; display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:700; cursor:pointer;">+</div>
+              </div>
+            </div>
+
+            <div style="background:#16191D; border:1px solid #262B31; border-radius:20px; padding:20px; margin-bottom:14px;">
+              <div style="color:#8B939E; font-size:13px; margin-bottom:10px; text-transform:uppercase; letter-spacing:0.06em;">น้ำหนัก (กก.)</div>
+              <div style="display:flex; align-items:center; justify-content:space-between;">
+                <div onClick="{{ decWeight }}" style="width:48px; height:48px; border-radius:14px; background:#1E2227; display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:700; cursor:pointer;">−</div>
+                <div style="font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:44px;">{{ weight }}</div>
+                <div onClick="{{ incWeight }}" style="width:48px; height:48px; border-radius:14px; background:#1E2227; display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:700; cursor:pointer;">+</div>
+              </div>
+            </div>
+
+            <div style="background:#16191D; border:1px solid #262B31; border-radius:20px; padding:20px; margin-bottom:14px;">
+              <div style="color:#8B939E; font-size:13px; margin-bottom:10px; text-transform:uppercase; letter-spacing:0.06em;">ส่วนสูง (ซม.)</div>
+              <div style="display:flex; align-items:center; justify-content:space-between;">
+                <div onClick="{{ decHeight }}" style="width:48px; height:48px; border-radius:14px; background:#1E2227; display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:700; cursor:pointer;">−</div>
+                <div style="font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:44px;">{{ height }}</div>
+                <div onClick="{{ incHeight }}" style="width:48px; height:48px; border-radius:14px; background:#1E2227; display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:700; cursor:pointer;">+</div>
+              </div>
+            </div>
+
+            <div style="background:#1E2227; border-radius:16px; padding:16px 20px; display:flex; align-items:center; justify-content:space-between;">
+              <div>
+                <div style="color:#8B939E; font-size:12px;">BMI ของคุณ</div>
+                <div style="font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:26px;">{{ bmiDisplay }}</div>
+              </div>
+              <div style="{{ bmiBadgeStyle }}">{{ bmiCategoryLabel }}</div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isLocationStep }}" hint-placeholder-val="{{ false }}">
+            <div style="font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:32px; line-height:1.1; margin-bottom:6px;">ออกกำลังกายที่ไหน?</div>
+            <div style="color:#8B939E; font-size:14px; margin-bottom:22px;">เลือกแล้วสลับได้ตลอดเวลาในหน้าแผนออกกำลังกาย</div>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+              <sc-for list="{{ locationOptions }}" as="l" hint-placeholder-count="3">
+                <div onClick="{{ l.onSelect }}" style="{{ l.cardStyle }}">
+                  <div style="font-size:17px; font-weight:700;">{{ l.label }}</div>
+                  <div style="color:#8B939E; font-size:13px; margin-top:2px;">{{ l.sub }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+
+        </div>
+
+        <div style="padding:12px 24px 40px;">
+          <div onClick="{{ primaryAction }}" style="{{ primaryBtnStyle }}">{{ primaryBtnLabel }}</div>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- ================= MAIN APP ================= -->
+    <sc-if value="{{ isApp }}" hint-placeholder-val="{{ false }}">
+      <div style="flex:1; overflow:auto; padding:60px 20px 16px;">
+
+        <!-- HOME -->
+        <sc-if value="{{ tabIsHome }}" hint-placeholder-val="{{ true }}">
+          <div style="font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:28px; margin-bottom:2px;">ภาพรวมของคุณ</div>
+          <div style="color:#8B939E; font-size:14px; margin-bottom:18px;">{{ genderLabel }} · {{ locationLabel }}</div>
+
+          <div style="background:linear-gradient(135deg,#16191D,#1E2227); border:1px solid #262B31; border-radius:20px; padding:20px; margin-bottom:14px;">
+            <div style="display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:14px;">
+              <div>
+                <div style="color:#8B939E; font-size:12px; text-transform:uppercase; letter-spacing:0.06em;">ดัชนีมวลกาย (BMI)</div>
+                <div style="font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:42px; line-height:1;">{{ bmiDisplay }}</div>
+              </div>
+              <div style="{{ bmiBadgeStyle }}">{{ bmiCategoryLabel }}</div>
+            </div>
+            <div style="height:8px; border-radius:6px; background:#262B31; position:relative; overflow:hidden; margin-bottom:8px;">
+              <div style="position:absolute; inset:0; background:linear-gradient(90deg,#4FA8FF,#B6FF3B,#FFD23B,#FF6A2B,#FF3B3B);"></div>
+              <div style="{{ bmiMarkerStyle }}"></div>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:11px; color:#5B636D;">
+              <span>15</span><span>25</span><span>35</span>
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;">
+            <div style="background:#16191D; border:1px solid #262B31; border-radius:16px; padding:14px;">
+              <div style="color:#8B939E; font-size:12px; margin-bottom:4px;">อายุ</div>
+              <div style="font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:22px;">{{ age }} ปี</div>
+            </div>
+            <div style="background:#16191D; border:1px solid #262B31; border-radius:16px; padding:14px;">
+              <div style="color:#8B939E; font-size:12px; margin-bottom:4px;">น้ำหนัก</div>
+              <div style="font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:22px;">{{ weight }} กก.</div>
+            </div>
+            <div style="background:#16191D; border:1px solid #262B31; border-radius:16px; padding:14px;">
+              <div style="color:#8B939E; font-size:12px; margin-bottom:4px;">ส่วนสูง</div>
+              <div style="font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:22px;">{{ height }} ซม.</div>
+            </div>
+            <div style="background:#16191D; border:1px solid #262B31; border-radius:16px; padding:14px;">
+              <div style="color:#8B939E; font-size:12px; margin-bottom:4px;">แคลอรี่/วัน</div>
+              <div style="font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:22px; color:#FF6A2B;">{{ tdee }}</div>
+            </div>
+          </div>
+
+          <div onClick="{{ goPlanTab }}" style="background:#16191D; border:1px solid #262B31; border-radius:20px; padding:18px; cursor:pointer;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
+              <div style="color:#8B939E; font-size:12px; text-transform:uppercase; letter-spacing:0.06em;">แผนวันนี้ · {{ todayShort }}</div>
+              <div style="color:#FF6A2B; font-size:13px; font-weight:600;">ดูแผน ›</div>
+            </div>
+            <div style="font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:22px; margin-bottom:4px;">{{ todayTitle }}</div>
+            <div style="color:#8B939E; font-size:13px;">{{ todayCountText }}</div>
+          </div>
+        </sc-if>
+
+        <!-- PLAN -->
+        <sc-if value="{{ tabIsPlan }}" hint-placeholder-val="{{ false }}">
+          <div style="font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:28px; margin-bottom:14px;">แผนออกกำลังกาย</div>
+
+          <div style="display:flex; gap:6px; overflow-x:auto; margin-bottom:14px; padding-bottom:2px;">
+            <sc-for list="{{ dayPills }}" as="d" hint-placeholder-count="7">
+              <div onClick="{{ d.onSelect }}" style="{{ d.style }}">{{ d.short }}</div>
+            </sc-for>
+          </div>
+
+          <div style="display:flex; background:#16191D; border:1px solid #262B31; border-radius:14px; padding:4px; margin-bottom:16px;">
+            <sc-for list="{{ locationPills }}" as="lp" hint-placeholder-count="2">
+              <div onClick="{{ lp.onSelect }}" style="{{ lp.style }}">{{ lp.label }}</div>
+            </sc-for>
+          </div>
+
+          <div style="font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:22px; margin-bottom:4px;">{{ currentDayTitle }}</div>
+
+          <sc-if value="{{ currentDayIsRest }}" hint-placeholder-val="{{ false }}">
+            <div style="background:#16191D; border:1px solid #262B31; border-radius:20px; padding:24px; text-align:center; margin-top:14px;">
+              <div style="font-size:15px; color:#8B939E; line-height:1.6;">วันนี้พักผ่อนให้กล้ามเนื้อฟื้นตัว ยืดเหยียดเบาๆ และนอนหลับให้เพียงพอ</div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ currentDayHasExercises }}" hint-placeholder-val="{{ true }}">
+            <div style="color:#8B939E; font-size:13px; margin-bottom:12px;">{{ dayProgressText }}</div>
+            <div style="height:6px; border-radius:4px; background:#262B31; margin-bottom:16px; overflow:hidden;">
+              <div style="{{ dayProgressBarStyle }}"></div>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+              <sc-for list="{{ currentDayExercises }}" as="ex" hint-placeholder-count="4">
+                <div style="background:#16191D; border:1px solid #262B31; border-radius:16px; padding:14px; display:flex; align-items:center; gap:12px;">
+                  <div onClick="{{ ex.onToggle }}" style="{{ ex.checkStyle }}"></div>
+                  <div onClick="{{ ex.onOpen }}" style="flex:1; cursor:pointer;">
+                    <div style="{{ ex.nameStyle }}">{{ ex.name }}</div>
+                    <div style="color:#8B939E; font-size:12px; margin-top:2px;">{{ ex.muscle }} · {{ ex.setsReps }}</div>
+                  </div>
+                  <div onClick="{{ ex.onOpen }}" style="color:#5B636D; font-size:18px; cursor:pointer;">›</div>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+        </sc-if>
+
+        <!-- MOVES -->
+        <sc-if value="{{ tabIsMoves }}" hint-placeholder-val="{{ false }}">
+          <div style="font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:28px; margin-bottom:14px;">คลังท่าออกกำลังกาย</div>
+          <div style="display:flex; gap:6px; overflow-x:auto; margin-bottom:16px; padding-bottom:2px;">
+            <sc-for list="{{ moveCategories }}" as="c" hint-placeholder-count="7">
+              <div onClick="{{ c.onSelect }}" style="{{ c.style }}">{{ c.label }}</div>
+            </sc-for>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            <sc-for list="{{ filteredMoves }}" as="m" hint-placeholder-count="6">
+              <div onClick="{{ m.onOpen }}" style="background:#16191D; border:1px solid #262B31; border-radius:16px; padding:14px; cursor:pointer;">
+                <div style="display:flex; align-items:center; justify-content:space-between;">
+                  <div style="font-size:15px; font-weight:600;">{{ m.name }}</div>
+                  <div style="color:#5B636D; font-size:18px;">›</div>
+                </div>
+                <div style="color:#8B939E; font-size:12px; margin-top:4px;">{{ m.muscle }} · {{ m.equip }}</div>
+                <div style="display:flex; gap:6px; margin-top:8px;">
+                  <div style="{{ m.homeBadgeStyle }}">บ้าน</div>
+                  <div style="{{ m.gymBadgeStyle }}">ยิม</div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <!-- FOOD -->
+        <sc-if value="{{ tabIsFood }}" hint-placeholder-val="{{ false }}">
+          <div style="font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:28px; margin-bottom:14px;">แผนอาหาร</div>
+          <div style="display:flex; gap:6px; overflow-x:auto; margin-bottom:16px; padding-bottom:2px;">
+            <sc-for list="{{ dayPills }}" as="d" hint-placeholder-count="7">
+              <div onClick="{{ d.onSelect }}" style="{{ d.style }}">{{ d.short }}</div>
+            </sc-for>
+          </div>
+
+          <div style="background:#16191D; border:1px solid #262B31; border-radius:16px; padding:16px; margin-bottom:16px;">
+            <div style="display:flex; justify-content:space-between; font-size:13px; color:#8B939E; margin-bottom:8px;">
+              <span>รวมวันนี้</span>
+              <span>{{ mealTotalKcal }} / {{ tdee }} kcal</span>
+            </div>
+            <div style="height:6px; border-radius:4px; background:#262B31; overflow:hidden;">
+              <div style="{{ mealProgressBarStyle }}"></div>
+            </div>
+          </div>
+
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            <sc-for list="{{ mealsForDay }}" as="meal" hint-placeholder-count="4">
+              <div style="background:#16191D; border:1px solid #262B31; border-radius:16px; padding:14px;">
+                <div style="color:#FF6A2B; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:4px;">{{ meal.type }}</div>
+                <div style="font-size:15px; font-weight:600; margin-bottom:4px;">{{ meal.name }}</div>
+                <div style="color:#8B939E; font-size:12px;">{{ meal.kcal }} kcal · โปรตีน {{ meal.protein }}g</div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <!-- PROGRESS -->
+        <sc-if value="{{ tabIsProgress }}" hint-placeholder-val="{{ false }}">
+          <div style="font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:28px; margin-bottom:14px;">ผลลัพธ์ของคุณ</div>
+
+          <div style="background:#16191D; border:1px solid #262B31; border-radius:20px; padding:18px; margin-bottom:14px;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:14px;">
+              <div>
+                <div style="color:#8B939E; font-size:12px;">สตรีค</div>
+                <div style="font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:26px; color:#FF6A2B;">{{ streakText }}</div>
+              </div>
+              <div style="text-align:right;">
+                <div style="color:#8B939E; font-size:12px;">สำเร็จสัปดาห์นี้</div>
+                <div style="font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:26px;">{{ weekDoneText }}</div>
+              </div>
+            </div>
+            <div style="display:flex; gap:6px;">
+              <sc-for list="{{ weekDots }}" as="wd" hint-placeholder-count="7">
+                <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:4px;">
+                  <div style="{{ wd.dotStyle }}"></div>
+                  <div style="color:#5B636D; font-size:10px;">{{ wd.short }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="background:linear-gradient(135deg,#16191D,#1E2227); border:1px solid #262B31; border-radius:20px; padding:18px; margin-bottom:14px;">
+            <div style="color:#8B939E; font-size:12px; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:10px;">คาดการณ์ใน 1 สัปดาห์ (ถ้าทำครบตามแผน)</div>
+            <div style="display:flex; align-items:baseline; gap:10px; margin-bottom:6px;">
+              <div style="font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:36px;">{{ predictedWeight }} กก.</div>
+              <div style="font-size:13px; font-weight:600; color:{{ forecastColor }};">{{ forecastChangeText }}</div>
+            </div>
+            <div style="color:#5B636D; font-size:11px; line-height:1.5;">ประมาณการจากแคลอรี่ที่แนะนำเทียบกับแผนอาหาร เป็นค่าคร่าวๆ ไม่แม่นยำ 100%</div>
+          </div>
+
+          <div style="background:#16191D; border:1px solid #262B31; border-radius:20px; padding:18px; margin-bottom:14px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+              <div style="color:#8B939E; font-size:12px; text-transform:uppercase; letter-spacing:0.06em;">น้ำหนักตามเวลา</div>
+              <div onClick="{{ logWeightToday }}" style="background:rgba(255,106,43,0.15); color:#FF6A2B; font-size:12px; font-weight:700; padding:6px 10px; border-radius:8px; cursor:pointer;">+ บันทึกวันนี้</div>
+            </div>
+            <div style="display:flex; align-items:flex-end; gap:8px; height:100px; margin-bottom:8px;">
+              <sc-for list="{{ chartBars }}" as="b" hint-placeholder-count="5">
+                <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%; gap:4px;">
+                  <div style="color:#8B939E; font-size:10px;">{{ b.weight }}</div>
+                  <div style="{{ b.barStyle }}"></div>
+                </div>
+              </sc-for>
+            </div>
+            <div style="display:flex; gap:8px;">
+              <sc-for list="{{ chartBars }}" as="b2" hint-placeholder-count="5">
+                <div style="flex:1; text-align:center; color:#5B636D; font-size:10px;">{{ b2.label }}</div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="color:#8B939E; font-size:13px; margin-bottom:10px; text-transform:uppercase; letter-spacing:0.06em;">สถิติส่วนตัวต่อท่า</div>
+          <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:16px;">
+            <sc-for list="{{ prList }}" as="pr" hint-placeholder-count="6">
+              <div style="background:#16191D; border:1px solid #262B31; border-radius:16px; padding:14px;">
+                <div style="font-size:14px; font-weight:600; margin-bottom:10px;">{{ pr.name }}</div>
+                <div style="display:flex; gap:16px;">
+                  <sc-if value="{{ pr.trackWeight }}" hint-placeholder-val="{{ true }}">
+                    <div style="flex:1;">
+                      <div style="color:#5B636D; font-size:11px; margin-bottom:6px;">น้ำหนัก (กก.)</div>
+                      <div style="display:flex; align-items:center; gap:8px;">
+                        <div onClick="{{ pr.decWeight }}" style="width:28px; height:28px; border-radius:8px; background:#1E2227; display:flex; align-items:center; justify-content:center; font-size:16px; cursor:pointer;">−</div>
+                        <div style="flex:1; text-align:center; font-weight:700; font-size:15px;">{{ pr.weightDisplay }}</div>
+                        <div onClick="{{ pr.incWeight }}" style="width:28px; height:28px; border-radius:8px; background:#1E2227; display:flex; align-items:center; justify-content:center; font-size:16px; cursor:pointer;">+</div>
+                      </div>
+                    </div>
+                  </sc-if>
+                  <div style="flex:1;">
+                    <div style="color:#5B636D; font-size:11px; margin-bottom:6px;">Reps สูงสุด</div>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <div onClick="{{ pr.decReps }}" style="width:28px; height:28px; border-radius:8px; background:#1E2227; display:flex; align-items:center; justify-content:center; font-size:16px; cursor:pointer;">−</div>
+                      <div style="flex:1; text-align:center; font-weight:700; font-size:15px;">{{ pr.repsDisplay }}</div>
+                      <div onClick="{{ pr.incReps }}" style="width:28px; height:28px; border-radius:8px; background:#1E2227; display:flex; align-items:center; justify-content:center; font-size:16px; cursor:pointer;">+</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <!-- PROFILE -->
+        <sc-if value="{{ tabIsProfile }}" hint-placeholder-val="{{ false }}">
+          <div style="font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:28px; margin-bottom:14px;">โปรไฟล์</div>
+
+          <div style="background:#1C1C1E; border-radius:20px; overflow:hidden; margin-bottom:16px;">
+            <sc-for list="{{ profileRows }}" as="row" hint-placeholder-count="5">
+              <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 16px; border-bottom:1px solid rgba(84,84,88,0.4);">
+                <div style="color:#8B939E; font-size:14px;">{{ row.label }}</div>
+                <div style="font-size:15px; font-weight:600;">{{ row.value }}</div>
+              </div>
+            </sc-for>
+          </div>
+
+          <div onClick="{{ startEdit }}" style="background:#FF6A2B; color:#0B0D10; text-align:center; padding:16px; border-radius:16px; font-weight:700; font-size:15px; margin-bottom:10px; cursor:pointer;">แก้ไขข้อมูล</div>
+          <div onClick="{{ resetProfile }}" style="background:#16191D; border:1px solid #262B31; color:#FF3B3B; text-align:center; padding:16px; border-radius:16px; font-weight:600; font-size:15px; cursor:pointer;">รีเซ็ตข้อมูลทั้งหมด</div>
+        </sc-if>
+
+      </div>
+
+      <!-- TAB BAR -->
+      <div style="display:flex; padding:8px 8px 30px; background:rgba(11,13,16,0.92); backdrop-filter:blur(16px); border-top:1px solid #1E2227;">
+        <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="5">
+          <div onClick="{{ t.onSelect }}" style="flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; padding:6px 0; cursor:pointer;">
+            <div style="{{ t.dotStyle }}"></div>
+            <div style="{{ t.labelStyle }}">{{ t.label }}</div>
+          </div>
+        </sc-for>
+      </div>
+
+      <!-- EXERCISE DETAIL SHEET -->
+      <sc-if value="{{ hasSelectedExercise }}" hint-placeholder-val="{{ false }}">
+        <div onClick="{{ closeExercise }}" style="position:absolute; inset:0; background:rgba(0,0,0,0.6); z-index:90;"></div>
+        <div style="position:absolute; left:0; right:0; bottom:0; z-index:91; background:#16191D; border-radius:24px 24px 0 0; padding:20px 20px 40px; max-height:75%; overflow:auto; border:1px solid #262B31;">
+          <div style="width:36px; height:4px; border-radius:3px; background:#3A3F46; margin:0 auto 16px;"></div>
+          <div style="font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:24px; margin-bottom:6px;">{{ selectedExercise.name }}</div>
+          <div style="display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap;">
+            <div style="background:#1E2227; color:#8B939E; font-size:12px; padding:6px 10px; border-radius:8px;">{{ selectedExercise.muscle }}</div>
+            <div style="background:#1E2227; color:#8B939E; font-size:12px; padding:6px 10px; border-radius:8px;">{{ selectedExercise.equip }}</div>
+            <div style="background:rgba(255,106,43,0.15); color:#FF6A2B; font-size:12px; padding:6px 10px; border-radius:8px; font-weight:600;">{{ selectedExercise.setsReps }}</div>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            <sc-for list="{{ selectedExercise.stepsNumbered }}" as="s" hint-placeholder-count="3">
+              <div style="display:flex; gap:10px;">
+                <div style="width:24px; height:24px; border-radius:8px; background:#1E2227; color:#FF6A2B; font-weight:700; font-size:13px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">{{ s.n }}</div>
+                <div style="font-size:14px; color:#D5D9DE; line-height:1.5;">{{ s.text }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+    </sc-if>
+
+  </div>
+</x-import>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const GENDER_LABELS = {
+  male: 'ชาย', female: 'หญิง', trans_man: 'ทรานส์ชาย', trans_woman: 'ทรานส์หญิง',
+  nonbinary: 'Non-binary', unspecified: 'ไม่ระบุ',
+};
+const LOCATION_LABELS = { home: 'ที่บ้าน', gym: 'ที่ยิม', both: 'ทั้งสองที่' };
+const GENDER_BMR_OFFSET = { male: 5, trans_man: 5, female: -161, trans_woman: -161, nonbinary: -78, unspecified: -78 };
+
+const EXERCISES = {
+  pushup: { name: 'วิดพื้น (Push-up)', muscle: 'อก', equip: 'น้ำหนักตัว', locations: ['home', 'gym'], sets: 4, reps: '12 ครั้ง',
+    steps: ['วางมือกว้างกว่าไหล่เล็กน้อย ลำตัวตรง', 'ลดตัวลงจนอกเกือบชิดพื้น ศอกทำมุม 45°', 'ดันตัวขึ้นจนแขนเหยียดสุด'] },
+  dbBenchPress: { name: 'ดัมเบลเบนช์เพรส', muscle: 'อก', equip: 'ดัมเบล', locations: ['home', 'gym'], sets: 4, reps: '10 ครั้ง',
+    steps: ['นอนหงายบนม้านั่งหรือพื้น ถือดัมเบลระดับอก', 'ดันดัมเบลขึ้นจนแขนเหยียดตรง', 'ลดลงช้าๆ จนศอกทำมุม 90°'] },
+  shoulderPress: { name: 'ดัมเบลโอเวอร์เฮดเพรส', muscle: 'ไหล่&แขน', equip: 'ดัมเบล', locations: ['home', 'gym'], sets: 3, reps: '12 ครั้ง',
+    steps: ['ยืนหรือนั่ง ถือดัมเบลระดับไหล่', 'ดันขึ้นเหนือศีรษะจนแขนเหยียดตรง', 'ลดลงช้าๆ กลับตำแหน่งเริ่มต้น'] },
+  tricepDip: { name: 'ดิปหลังเก้าอี้', muscle: 'ไหล่&แขน', equip: 'เก้าอี้/ม้านั่ง', locations: ['home', 'gym'], sets: 3, reps: '12 ครั้ง',
+    steps: ['วางมือบนขอบเก้าอี้ เหยียดขาไปด้านหน้า', 'งอศอกลดตัวลงจนต้นแขนขนานพื้น', 'ดันตัวขึ้นกลับตำแหน่งเริ่มต้น'] },
+  bentRow: { name: 'ก้มตัวพายดัมเบล', muscle: 'หลัง', equip: 'ดัมเบล', locations: ['home', 'gym'], sets: 4, reps: '10 ครั้ง',
+    steps: ['ก้มตัวไปด้านหน้า หลังตรง เข่างอเล็กน้อย', 'ดึงดัมเบลขึ้นชิดลำตัวระดับสะโพก', 'ลดลงช้าๆ ควบคุมจังหวะ'] },
+  superman: { name: 'ซุปเปอร์แมน', muscle: 'หลัง', equip: 'น้ำหนักตัว', locations: ['home', 'gym'], sets: 3, reps: '15 ครั้ง',
+    steps: ['นอนคว่ำ เหยียดแขนขาไปด้านหน้า-หลัง', 'ยกแขนขาและอกขึ้นพร้อมกัน ค้างไว้ 2 วินาที', 'ลดลงช้าๆ กลับตำแหน่งเริ่มต้น'] },
+  latPulldown: { name: 'ดึงบาร์เหนือศีรษะ', muscle: 'หลัง', equip: 'เครื่องเคเบิล', locations: ['gym'], sets: 4, reps: '10 ครั้ง',
+    steps: ['นั่งจับบาร์กว้างกว่าไหล่', 'ดึงบาร์ลงมาระดับหน้าอก สะบักหุบเข้า', 'ปล่อยขึ้นช้าๆ ควบคุมจังหวะ'] },
+  bicepCurl: { name: 'ดัมเบลเคิร์ล', muscle: 'ไหล่&แขน', equip: 'ดัมเบล', locations: ['home', 'gym'], sets: 3, reps: '12 ครั้ง',
+    steps: ['ยืนถือดัมเบลข้างลำตัว ฝ่ามือหันไปด้านหน้า', 'งอศอกยกดัมเบลขึ้นถึงไหล่', 'ลดลงช้าๆ ควบคุมจังหวะ'] },
+  squat: { name: 'สควอท (Squat)', muscle: 'ขา', equip: 'น้ำหนักตัว', locations: ['home', 'gym'], sets: 4, reps: '15 ครั้ง',
+    steps: ['ยืนแยกขากว้างเท่าไหล่ ปลายเท้าชี้เฉียงออก', 'ย่อตัวลงเหมือนนั่งเก้าอี้ สะโพกไปด้านหลัง', 'ดันตัวขึ้นกลับตำแหน่งยืน'] },
+  lunge: { name: 'ลันจ์เดิน', muscle: 'ขา', equip: 'น้ำหนักตัว/ดัมเบล', locations: ['home', 'gym'], sets: 3, reps: '12 ครั้งต่อข้าง',
+    steps: ['ก้าวขาไปด้านหน้ายาวๆ', 'ย่อเข่าทั้งสองข้างจนขาหลังเกือบแตะพื้น', 'ดันตัวก้าวต่อสลับขา'] },
+  gluteBridge: { name: 'กลูทบริดจ์', muscle: 'ขา', equip: 'น้ำหนักตัว', locations: ['home', 'gym'], sets: 3, reps: '15 ครั้ง',
+    steps: ['นอนหงาย งอเข่า วางเท้าราบกับพื้น', 'ยกสะโพกขึ้นจนลำตัวเป็นเส้นตรง เกร็งก้น', 'ลดลงช้าๆ ควบคุมจังหวะ'] },
+  legPress: { name: 'เลกเพรส', muscle: 'ขา', equip: 'เครื่องเลกเพรส', locations: ['gym'], sets: 4, reps: '12 ครั้ง',
+    steps: ['นั่งบนเครื่อง วางเท้าบนแท่นกว้างเท่าไหล่', 'ดันแท่นออกจนขาเกือบเหยียดตรง', 'งอเข่าลดกลับช้าๆ'] },
+  calfRaise: { name: 'ยกส้นเท้า', muscle: 'ขา', equip: 'น้ำหนักตัว', locations: ['home', 'gym'], sets: 3, reps: '20 ครั้ง',
+    steps: ['ยืนตรง เท้าราบกับพื้นหรือขอบขั้นบันได', 'เขย่งปลายเท้ายกส้นขึ้นสูงสุด ค้างไว้', 'ลดลงช้าๆ ควบคุมจังหวะ'] },
+  plank: { name: 'แพลงก์ (Plank)', muscle: 'แกนกลาง&คาร์ดิโอ', equip: 'น้ำหนักตัว', locations: ['home', 'gym'], sets: 3, reps: '40 วินาที',
+    steps: ['วางศอกและปลายเท้าลงพื้น ลำตัวเป็นเส้นตรง', 'เกร็งหน้าท้องและก้นตลอดท่า', 'หายใจปกติ ค้างไว้ตามเวลา'] },
+  mountainClimber: { name: 'เมาน์เทนไคลม์เบอร์', muscle: 'แกนกลาง&คาร์ดิโอ', equip: 'น้ำหนักตัว', locations: ['home', 'gym'], sets: 3, reps: '30 วินาที',
+    steps: ['เริ่มท่าแพลงก์แขนตรง', 'สลับดึงเข่าเข้าหาอกเร็วๆ', 'เกร็งแกนกลางลำตัวตลอดท่า'] },
+  russianTwist: { name: 'รัสเซียนทวิสต์', muscle: 'แกนกลาง&คาร์ดิโอ', equip: 'น้ำหนักตัว/ดัมเบล', locations: ['home', 'gym'], sets: 3, reps: '20 ครั้ง',
+    steps: ['นั่งเอนตัวเล็กน้อย ยกเท้าลอยพื้น', 'หมุนลำตัวแตะพื้นสลับซ้าย-ขวา', 'เกร็งหน้าท้องตลอดการเคลื่อนไหว'] },
+  jumpRope: { name: 'กระโดดเชือก / จั๊มปิ้งแจ็ค', muscle: 'แกนกลาง&คาร์ดิโอ', equip: 'เชือกกระโดด', locations: ['home', 'gym'], sets: 4, reps: '1 นาที',
+    steps: ['กระโดดเบาๆ บนปลายเท้า', 'แกว่งเชือกจังหวะสม่ำเสมอ (หรือกางแขน-ขา)', 'หายใจสม่ำเสมอตลอดเซ็ต'] },
+  lateralRaise: { name: 'ยกดัมเบลข้างลำตัว', muscle: 'ไหล่&แขน', equip: 'ดัมเบล', locations: ['home', 'gym'], sets: 3, reps: '12 ครั้ง',
+    steps: ['ยืนถือดัมเบลข้างลำตัว', 'ยกแขนขึ้นด้านข้างจนขนานพื้น', 'ลดลงช้าๆ ควบคุมจังหวะ'] },
+  hammerCurl: { name: 'แฮมเมอร์เคิร์ล', muscle: 'ไหล่&แขน', equip: 'ดัมเบล', locations: ['home', 'gym'], sets: 3, reps: '12 ครั้ง',
+    steps: ['ถือดัมเบลแนวตั้ง ฝ่ามือหันเข้าลำตัว', 'งอศอกยกขึ้นถึงไหล่', 'ลดลงช้าๆ ควบคุมจังหวะ'] },
+  facePull: { name: 'เคเบิลเฟซพูล', muscle: 'ไหล่&แขน', equip: 'เครื่องเคเบิล', locations: ['gym'], sets: 3, reps: '15 ครั้ง',
+    steps: ['จับเชือกเคเบิลระดับหน้า', 'ดึงเข้าหาใบหน้า ศอกกางออก สะบักหุบ', 'ปล่อยกลับช้าๆ ควบคุมจังหวะ'] },
+  burpee: { name: 'เบอร์พี (Burpee)', muscle: 'ฟูลบอดี้', equip: 'น้ำหนักตัว', locations: ['home', 'gym'], sets: 3, reps: '10 ครั้ง',
+    steps: ['ย่อตัวลงมือแตะพื้น กระโดดขาไปด้านหลังเป็นท่าแพลงก์', 'วิดพื้น 1 ครั้ง แล้วดึงขากลับ', 'กระโดดขึ้นพร้อมยกแขนเหนือศีรษะ'] },
+  kettlebellSwing: { name: 'สวิงเคทเทิลเบลล์', muscle: 'ฟูลบอดี้', equip: 'เคทเทิลเบลล์/ดัมเบล', locations: ['home', 'gym'], sets: 4, reps: '15 ครั้ง',
+    steps: ['ยืนแยกขา ถือน้ำหนักด้วยสองมือด้านหน้า', 'ส่งสะโพกไปด้านหลังแล้วสวิงขึ้นระดับอก', 'ใช้แรงสะโพก ไม่ใช้แรงแขน'] },
+  stepUp: { name: 'สเต็ปอัพ', muscle: 'ฟูลบอดี้', equip: 'ม้านั่ง/ขั้นบันได', locations: ['home', 'gym'], sets: 3, reps: '12 ครั้งต่อข้าง',
+    steps: ['วางเท้าขึ้นบนม้านั่งหรือขั้นบันได', 'ดันตัวขึ้นจนขาเหยียดตรง', 'ก้าวลงช้าๆ สลับข้าง'] },
+  deadlift: { name: 'บาร์เบลเดดลิฟท์', muscle: 'ฟูลบอดี้', equip: 'บาร์เบล', locations: ['gym'], sets: 4, reps: '8 ครั้ง',
+    steps: ['ยืนแยกขาเท่าไหล่ จับบาร์เบลกว้างเท่าไหล่', 'หลังตรง ดันสะโพกยกบาร์ขึ้นจนยืนตรง', 'ลดบาร์ลงช้าๆ ควบคุมจังหวะ'] },
+};
+
+const DAYS = ['จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์', 'อาทิตย์'];
+const DAYS_SHORT = ['จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส', 'อา'];
+
+const WEEKLY_PLAN = [
+  { title: 'อก & ไทรเซป (Push)', rest: false, exIds: ['pushup', 'dbBenchPress', 'shoulderPress', 'tricepDip'] },
+  { title: 'หลัง & ไบเซป (Pull)', rest: false, exIds: ['bentRow', 'superman', 'latPulldown', 'bicepCurl'] },
+  { title: 'ขา & สะโพก (Legs)', rest: false, exIds: ['squat', 'lunge', 'gluteBridge', 'legPress', 'calfRaise'] },
+  { title: 'คาร์ดิโอ & แกนกลาง', rest: false, exIds: ['plank', 'mountainClimber', 'russianTwist', 'jumpRope'] },
+  { title: 'ไหล่ & แขน', rest: false, exIds: ['shoulderPress', 'lateralRaise', 'hammerCurl', 'facePull'] },
+  { title: 'ฟูลบอดี้', rest: false, exIds: ['burpee', 'kettlebellSwing', 'stepUp', 'deadlift'] },
+  { title: 'พักผ่อน (Rest Day)', rest: true, exIds: [] },
+];
+
+const MEALS_BY_DAY = [
+  { breakfast: { name: 'ข้าวต้มไข่ + อกไก่ฉีก', kcal: 350, protein: 28 }, lunch: { name: 'ข้าวกล้อง อกไก่ย่าง สลัดผัก', kcal: 520, protein: 40 }, dinner: { name: 'ปลานึ่งมะนาว ผักลวก', kcal: 400, protein: 35 }, snack: { name: 'กรีกโยเกิร์ต + ถั่ว', kcal: 180, protein: 12 } },
+  { breakfast: { name: 'ไข่ต้ม 2 ฟอง + ขนมปังโฮลวีท', kcal: 320, protein: 22 }, lunch: { name: 'ข้าวไข่เจียวทรงเครื่อง น้ำพริกผัก', kcal: 500, protein: 30 }, dinner: { name: 'ต้มยำกุ้งน้ำใส + ข้าวกล้อง', kcal: 420, protein: 32 }, snack: { name: 'กล้วย + เนยถั่ว', kcal: 200, protein: 8 } },
+  { breakfast: { name: 'โจ๊กหมูสับใส่ไข่', kcal: 330, protein: 20 }, lunch: { name: 'ข้าวผัดกะเพราไก่ไข่ดาว', kcal: 550, protein: 35 }, dinner: { name: 'แกงจืดเต้าหู้หมูสับ + ข้าวกล้อง', kcal: 400, protein: 28 }, snack: { name: 'นมถั่วเหลือง + ธัญพืช', kcal: 170, protein: 10 } },
+  { breakfast: { name: 'สมูทตี้กล้วยโปรตีน', kcal: 300, protein: 25 }, lunch: { name: 'สลัดอกไก่ + ควินัว', kcal: 480, protein: 38 }, dinner: { name: 'ปลาแซลมอนย่าง บรอกโคลี', kcal: 450, protein: 36 }, snack: { name: 'แอปเปิ้ล + อัลมอนด์', kcal: 190, protein: 6 } },
+  { breakfast: { name: 'ข้าวต้มปลา', kcal: 310, protein: 24 }, lunch: { name: 'ข้าวกล้อง เนื้อสันย่าง สลัดผัก', kcal: 540, protein: 42 }, dinner: { name: 'ต้มจืดผักรวมหมูสับ + ข้าว', kcal: 400, protein: 30 }, snack: { name: 'เต้าหู้ปั่นโปรตีน', kcal: 160, protein: 14 } },
+  { breakfast: { name: 'แพนเค้กโปรตีน + ผลไม้', kcal: 360, protein: 26 }, lunch: { name: 'ข้าวหน้าไก่ย่าง สลัดผัก', kcal: 520, protein: 40 }, dinner: { name: 'ยำวุ้นเส้นทะเล', kcal: 380, protein: 28 }, snack: { name: 'ผลไม้รวมตามฤดูกาล', kcal: 150, protein: 3 } },
+  { breakfast: { name: 'ข้าวโอ๊ต + ผลไม้สด', kcal: 320, protein: 15 }, lunch: { name: 'ข้าวแกงเขียวหวานไก่', kcal: 500, protein: 30 }, dinner: { name: 'สุกี้น้ำทะเล', kcal: 420, protein: 32 }, snack: { name: 'ช็อกโกแลตดำ + ถั่ว', kcal: 200, protein: 8 } },
+];
+
+const MOVE_CATEGORIES = ['ทั้งหมด', 'อก', 'หลัง', 'ขา', 'ไหล่&แขน', 'แกนกลาง&คาร์ดิโอ', 'ฟูลบอดี้'];
+
+function bmiCategory(bmi) {
+  if (bmi < 18.5) return { label: 'น้ำหนักน้อย', color: '#4FA8FF' };
+  if (bmi < 23) return { label: 'ปกติ', color: '#B6FF3B' };
+  if (bmi < 25) return { label: 'ท้วม', color: '#FFD23B' };
+  if (bmi < 30) return { label: 'อ้วน', color: '#FF6A2B' };
+  return { label: 'อ้วนมาก', color: '#FF3B3B' };
+}
+
+function todayIndex() {
+  const d = new Date().getDay();
+  return d === 0 ? 6 : d - 1;
+}
+
+class Component extends DCLogic {
+  state = {
+    step: 'gender',
+    gender: null,
+    age: 25,
+    weight: 70,
+    height: 170,
+    location: null,
+    isEditing: false,
+    tab: 'home',
+    day: todayIndex(),
+    planLocation: 'home',
+    moveFilter: 'ทั้งหมด',
+    selectedExId: null,
+    completed: {},
+    weightLog: [
+      { label: '4 สัปดาห์ก่อน', weight: 75 },
+      { label: '3 สัปดาห์ก่อน', weight: 74 },
+      { label: '2 สัปดาห์ก่อน', weight: 72 },
+      { label: 'สัปดาห์ก่อน', weight: 71 },
+    ],
+    prRecords: {
+      squat: { weight: 20, reps: 12 },
+      deadlift: { weight: 20, reps: 8 },
+      dbBenchPress: { weight: 10, reps: 10 },
+      shoulderPress: { weight: 8, reps: 10 },
+      bentRow: { weight: 10, reps: 10 },
+      pushup: { weight: 0, reps: 15 },
+    },
+  };
+
+  componentDidMount() {
+    try {
+      const raw = localStorage.getItem('fitapp_profile_v1');
+      if (raw) {
+        const saved = JSON.parse(raw);
+        this.setState({ ...saved, step: 'app', isEditing: false });
+      }
+    } catch (e) {}
+  }
+
+  persist(extra) {
+    const s = { ...this.state, ...(extra || {}) };
+    if (s.step === 'app') {
+      try {
+        localStorage.setItem('fitapp_profile_v1', JSON.stringify({
+          gender: s.gender, age: s.age, weight: s.weight, height: s.height,
+          location: s.location, planLocation: s.planLocation, completed: s.completed,
+          weightLog: s.weightLog, prRecords: s.prRecords,
+        }));
+      } catch (e) {}
+    }
+  }
+
+  selectGender(g) { this.setState({ gender: g }); }
+  goNext() {
+    if (this.state.step === 'gender' && this.state.gender) this.setState({ step: 'body' });
+    else if (this.state.step === 'body') this.setState({ step: 'location' });
+  }
+  goBack() {
+    if (this.state.step === 'body') this.setState({ step: 'gender' });
+    else if (this.state.step === 'location') this.setState({ step: 'body' });
+    else if (this.state.step === 'gender' && this.state.isEditing) this.setState({ step: 'app', isEditing: false });
+  }
+  adjustAge(d) { this.setState(s => ({ age: Math.max(10, Math.min(90, s.age + d)) })); }
+  adjustWeight(d) { this.setState(s => ({ weight: Math.max(30, Math.min(200, s.weight + d)) })); }
+  adjustHeight(d) { this.setState(s => ({ height: Math.max(120, Math.min(220, s.height + d)) })); }
+  selectLocation(loc) { this.setState({ location: loc, planLocation: loc === 'gym' ? 'gym' : 'home' }); }
+  finishOnboarding() {
+    if (!this.state.location) return;
+    const next = { step: 'app', tab: 'home', isEditing: false };
+    this.setState(next, () => this.persist());
+  }
+  setTab(t) { this.setState({ tab: t }); }
+  setDay(i) { this.setState({ day: i }); }
+  setPlanLocation(l) { this.setState({ planLocation: l }, () => this.persist()); }
+  setMoveFilter(f) { this.setState({ moveFilter: f }); }
+  openExercise(id) { this.setState({ selectedExId: id }); }
+  closeExercise() { this.setState({ selectedExId: null }); }
+  toggleComplete(key) {
+    this.setState(s => ({ completed: { ...s.completed, [key]: !s.completed[key] } }), () => this.persist());
+  }
+  logWeightToday() {
+    this.setState(s => {
+      const log = s.weightLog.slice();
+      const last = log[log.length - 1];
+      if (last && last.label === 'วันนี้') log[log.length - 1] = { label: 'วันนี้', weight: s.weight };
+      else log.push({ label: 'วันนี้', weight: s.weight });
+      return { weightLog: log };
+    }, () => this.persist());
+  }
+  adjustPR(exId, field, delta) {
+    this.setState(s => {
+      const rec = { ...(s.prRecords[exId] || { weight: 0, reps: 0 }) };
+      if (field === 'weight') rec.weight = Math.max(0, Math.min(300, rec.weight + delta));
+      else rec.reps = Math.max(0, Math.min(100, rec.reps + delta));
+      return { prRecords: { ...s.prRecords, [exId]: rec } };
+    }, () => this.persist());
+  }
+  startEdit() { this.setState({ step: 'gender', isEditing: true }); }
+  resetProfile() {
+    try { localStorage.removeItem('fitapp_profile_v1'); } catch (e) {}
+    this.setState({
+      step: 'gender', gender: null, age: 25, weight: 70, height: 170, location: null,
+      isEditing: false, tab: 'home', day: todayIndex(), planLocation: 'home',
+      moveFilter: 'ทั้งหมด', selectedExId: null, completed: {},
+      weightLog: [
+        { label: '4 สัปดาห์ก่อน', weight: 75 }, { label: '3 สัปดาห์ก่อน', weight: 74 },
+        { label: '2 สัปดาห์ก่อน', weight: 72 }, { label: 'สัปดาห์ก่อน', weight: 71 },
+      ],
+      prRecords: {
+        squat: { weight: 20, reps: 12 }, deadlift: { weight: 20, reps: 8 },
+        dbBenchPress: { weight: 10, reps: 10 }, shoulderPress: { weight: 8, reps: 10 },
+        bentRow: { weight: 10, reps: 10 }, pushup: { weight: 0, reps: 15 },
+      },
+    });
+  }
+
+  renderVals() {
+    const s = this.state;
+    const bmi = s.weight / Math.pow(s.height / 100, 2);
+    const bmiDisplay = bmi.toFixed(1);
+    const cat = bmiCategory(bmi);
+    const markerLeft = Math.max(2, Math.min(98, ((bmi - 15) / (35 - 15)) * 100));
+    const bmrOffset = GENDER_BMR_OFFSET[s.gender] ?? -78;
+    const bmr = 10 * s.weight + 6.25 * s.height - 5 * s.age + bmrOffset;
+    const tdee = Math.round(bmr * 1.55);
+
+    const genderOptions = ['male', 'female', 'trans_man', 'trans_woman', 'nonbinary', 'unspecified'].map(g => {
+      const selected = s.gender === g;
+      return {
+        label: GENDER_LABELS[g],
+        onSelect: () => this.selectGender(g),
+        cardStyle: `padding:16px 18px; border-radius:16px; cursor:pointer; border:1.5px solid ${selected ? '#FF6A2B' : '#262B31'}; background:${selected ? 'rgba(255,106,43,0.12)' : '#16191D'};`,
+      };
+    });
+
+    const locationOptions = [
+      { key: 'home', label: 'ที่บ้าน', sub: 'ใช้น้ำหนักตัว/ดัมเบล เป็นหลัก' },
+      { key: 'gym', label: 'ที่ยิม', sub: 'เข้าถึงเครื่องและอุปกรณ์ครบ' },
+      { key: 'both', label: 'ทั้งสองที่', sub: 'สลับได้ตามความสะดวก' },
+    ].map(l => {
+      const selected = s.location === l.key;
+      return {
+        ...l,
+        onSelect: () => this.selectLocation(l.key),
+        cardStyle: `padding:16px 18px; border-radius:16px; cursor:pointer; border:1.5px solid ${selected ? '#FF6A2B' : '#262B31'}; background:${selected ? 'rgba(255,106,43,0.12)' : '#16191D'};`,
+      };
+    });
+
+    const isGenderStep = s.step === 'gender';
+    const isBodyStep = s.step === 'body';
+    const isLocationStep = s.step === 'location';
+    const isOnboarding = isGenderStep || isBodyStep || isLocationStep;
+    const isApp = s.step === 'app';
+
+    const dotStyle = active => `height:4px; flex:1; border-radius:3px; background:${active ? '#FF6A2B' : '#262B31'};`;
+
+    let primaryBtnLabel = 'ถัดไป';
+    let primaryDisabled = false;
+    let primaryAction = () => this.goNext();
+    if (isGenderStep) { primaryDisabled = !s.gender; }
+    if (isLocationStep) { primaryBtnLabel = s.isEditing ? 'บันทึก' : 'เริ่มใช้งาน'; primaryDisabled = !s.location; primaryAction = () => this.finishOnboarding(); }
+
+    const dayPills = DAYS_SHORT.map((short, i) => {
+      const active = s.day === i;
+      return {
+        short, onSelect: () => this.setDay(i),
+        style: `flex-shrink:0; width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:600; cursor:pointer; background:${active ? '#FF6A2B' : '#16191D'}; color:${active ? '#0B0D10' : '#8B939E'}; border:1px solid ${active ? '#FF6A2B' : '#262B31'};`,
+      };
+    });
+
+    const locationPills = [{ key: 'home', label: 'บ้าน' }, { key: 'gym', label: 'ยิม' }].map(lp => {
+      const active = s.planLocation === lp.key;
+      return {
+        label: lp.label, onSelect: () => this.setPlanLocation(lp.key),
+        style: `flex:1; text-align:center; padding:10px; border-radius:10px; font-size:14px; font-weight:600; cursor:pointer; background:${active ? '#1E2227' : 'transparent'}; color:${active ? '#F5F6F7' : '#8B939E'};`,
+      };
+    });
+
+    const dayPlan = WEEKLY_PLAN[s.day];
+    const currentDayExercises = dayPlan.exIds
+      .map(id => ({ id, ...EXERCISES[id] }))
+      .filter(ex => ex.locations.includes(s.planLocation))
+      .map(ex => {
+        const key = `${s.day}-${ex.id}`;
+        const done = !!s.completed[key];
+        return {
+          id: ex.id, name: ex.name, muscle: ex.muscle,
+          setsReps: `${ex.sets} เซ็ต x ${ex.reps}`,
+          onToggle: () => this.toggleComplete(key),
+          onOpen: () => this.openExercise(ex.id),
+          checkStyle: `width:24px; height:24px; border-radius:8px; flex-shrink:0; cursor:pointer; border:2px solid ${done ? '#B6FF3B' : '#3A3F46'}; background:${done ? '#B6FF3B' : 'transparent'};`,
+          nameStyle: `font-size:15px; font-weight:600; ${done ? 'color:#5B636D; text-decoration:line-through;' : 'color:#F5F6F7;'}`,
+        };
+      });
+    const doneCount = currentDayExercises.filter(e => s.completed[`${s.day}-${e.id}`]).length;
+    const dayProgressPct = currentDayExercises.length ? (doneCount / currentDayExercises.length) * 100 : 0;
+
+    const moveCategories = MOVE_CATEGORIES.map(c => {
+      const active = s.moveFilter === c;
+      return {
+        label: c, onSelect: () => this.setMoveFilter(c),
+        style: `flex-shrink:0; padding:9px 14px; border-radius:10px; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap; background:${active ? '#FF6A2B' : '#16191D'}; color:${active ? '#0B0D10' : '#8B939E'}; border:1px solid ${active ? '#FF6A2B' : '#262B31'};`,
+      };
+    });
+
+    const filteredMoves = Object.keys(EXERCISES)
+      .filter(id => s.moveFilter === 'ทั้งหมด' || EXERCISES[id].muscle === s.moveFilter)
+      .map(id => {
+        const ex = EXERCISES[id];
+        const hasHome = ex.locations.includes('home');
+        const hasGym = ex.locations.includes('gym');
+        const badgeBase = 'font-size:11px; padding:3px 8px; border-radius:6px; font-weight:600;';
+        return {
+          id, name: ex.name, muscle: ex.muscle, equip: ex.equip,
+          onOpen: () => this.openExercise(id),
+          homeBadgeStyle: `${badgeBase} background:${hasHome ? 'rgba(182,255,59,0.15)' : '#1E2227'}; color:${hasHome ? '#B6FF3B' : '#5B636D'};`,
+          gymBadgeStyle: `${badgeBase} background:${hasGym ? 'rgba(255,106,43,0.15)' : '#1E2227'}; color:${hasGym ? '#FF6A2B' : '#5B636D'};`,
+        };
+      });
+
+    const meal = MEALS_BY_DAY[s.day];
+    const mealsForDay = [
+      { type: 'มื้อเช้า', ...meal.breakfast },
+      { type: 'มื้อกลางวัน', ...meal.lunch },
+      { type: 'มื้อเย็น', ...meal.dinner },
+      { type: 'ของว่าง', ...meal.snack },
+    ];
+    const mealTotalKcal = mealsForDay.reduce((a, m) => a + m.kcal, 0);
+    const mealPct = Math.max(2, Math.min(100, (mealTotalKcal / tdee) * 100));
+
+    const tabDefs = [
+      { key: 'home', label: 'หน้าแรก' },
+      { key: 'plan', label: 'แผน' },
+      { key: 'moves', label: 'ท่า' },
+      { key: 'food', label: 'อาหาร' },
+      { key: 'progress', label: 'ผลลัพธ์' },
+      { key: 'profile', label: 'โปรไฟล์' },
+    ];
+
+    const today = todayIndex();
+    const weekDoneFlags = WEEKLY_PLAN.map((dp, i) => {
+      if (dp.rest) return true;
+      const total = dp.exIds.length;
+      const doneCt = dp.exIds.filter(id => s.completed[`${i}-${id}`]).length;
+      return total > 0 && doneCt === total;
+    });
+    const workoutDaysTotal = WEEKLY_PLAN.filter(d => !d.rest).length;
+    const weekDoneCount = WEEKLY_PLAN.reduce((a, dp, i) => a + ((!dp.rest && weekDoneFlags[i]) ? 1 : 0), 0);
+    let streak = 0;
+    for (let i = today; i >= 0; i--) { if (weekDoneFlags[i]) streak++; else break; }
+    const weekDots = DAYS_SHORT.map((short, i) => {
+      const isRest = WEEKLY_PLAN[i].rest;
+      const done = weekDoneFlags[i] && !isRest;
+      const isToday = i === today;
+      return {
+        short,
+        dotStyle: `width:14px; height:14px; border-radius:50%; margin:0 auto; background:${done ? '#B6FF3B' : 'transparent'}; border:2px solid ${isRest ? '#3A3F46' : (done ? '#B6FF3B' : '#3A3F46')}; ${isToday ? 'box-shadow:0 0 0 2px #FF6A2B;' : ''}`,
+      };
+    });
+
+    const avgMealKcal = MEALS_BY_DAY.reduce((sum, m) => sum + m.breakfast.kcal + m.lunch.kcal + m.dinner.kcal + m.snack.kcal, 0) / MEALS_BY_DAY.length;
+    const dailyBalance = tdee - avgMealKcal;
+    const weeklyChangeKg = (dailyBalance * 7) / 7700;
+    const predictedWeight = (s.weight - weeklyChangeKg).toFixed(1);
+    const forecastColor = weeklyChangeKg > 0.05 ? '#B6FF3B' : (weeklyChangeKg < -0.05 ? '#FF6A2B' : '#8B939E');
+    const forecastChangeText = weeklyChangeKg > 0.05 ? `↓ ลดลง ~${weeklyChangeKg.toFixed(1)} กก.`
+      : (weeklyChangeKg < -0.05 ? `↑ เพิ่มขึ้น ~${Math.abs(weeklyChangeKg).toFixed(1)} กก.` : 'คงที่');
+
+    const weights = s.weightLog.map(e => e.weight);
+    const minW = Math.min(...weights), maxW = Math.max(...weights);
+    const chartBars = s.weightLog.map((e, i) => {
+      const isLast = i === s.weightLog.length - 1;
+      const pct = maxW === minW ? 60 : 20 + ((e.weight - minW) / (maxW - minW)) * 70;
+      return {
+        label: e.label, weight: `${e.weight}`,
+        barStyle: `width:100%; border-radius:6px 6px 2px 2px; height:${pct}%; background:${isLast ? '#FF6A2B' : '#3A3F46'};`,
+      };
+    });
+
+    const PR_EXERCISES = [
+      { id: 'squat', trackWeight: true }, { id: 'deadlift', trackWeight: true },
+      { id: 'dbBenchPress', trackWeight: true }, { id: 'shoulderPress', trackWeight: true },
+      { id: 'bentRow', trackWeight: true }, { id: 'pushup', trackWeight: false },
+    ];
+    const prList = PR_EXERCISES.map(p => {
+      const ex = EXERCISES[p.id];
+      const rec = s.prRecords[p.id] || { weight: 0, reps: 0 };
+      return {
+        name: ex.name, trackWeight: p.trackWeight,
+        weightDisplay: `${rec.weight} กก.`, repsDisplay: `${rec.reps}`,
+        decWeight: () => this.adjustPR(p.id, 'weight', -2.5), incWeight: () => this.adjustPR(p.id, 'weight', 2.5),
+        decReps: () => this.adjustPR(p.id, 'reps', -1), incReps: () => this.adjustPR(p.id, 'reps', 1),
+      };
+    });
+    const tabs = tabDefs.map(t => {
+      const active = s.tab === t.key;
+      return {
+        label: t.label, onSelect: () => this.setTab(t.key),
+        dotStyle: `width:5px; height:5px; border-radius:50%; background:${active ? '#FF6A2B' : 'transparent'};`,
+        labelStyle: `font-size:11px; font-weight:600; color:${active ? '#FF6A2B' : '#5B636D'};`,
+      };
+    });
+
+    const sel = s.selectedExId ? EXERCISES[s.selectedExId] : null;
+    const selectedExercise = sel ? {
+      id: s.selectedExId, name: sel.name, muscle: sel.muscle, equip: sel.equip,
+      setsReps: `${sel.sets} เซ็ต x ${sel.reps}`,
+      stepsNumbered: sel.steps.map((text, i) => ({ n: i + 1, text })),
+    } : null;
+
+    const profileRows = [
+      { label: 'เพศ/อัตลักษณ์', value: GENDER_LABELS[s.gender] || '-' },
+      { label: 'อายุ', value: `${s.age} ปี` },
+      { label: 'น้ำหนัก', value: `${s.weight} กก.` },
+      { label: 'ส่วนสูง', value: `${s.height} ซม.` },
+      { label: 'ค่า BMI', value: `${bmiDisplay} (${cat.label})` },
+      { label: 'สถานที่ออกกำลังกาย', value: LOCATION_LABELS[s.location] || '-' },
+    ];
+
+    return {
+      isOnboarding, isGenderStep, isBodyStep, isLocationStep, isApp,
+      backBtnStyle: `font-size:14px; color:#8B939E; cursor:pointer; visibility:${(isGenderStep && !s.isEditing) ? 'hidden' : 'visible'};`,
+      goBack: () => this.goBack(),
+      dotGenderStyle: dotStyle(true),
+      dotBodyStyle: dotStyle(isBodyStep || isLocationStep),
+      dotLocationStyle: dotStyle(isLocationStep),
+      genderOptions, locationOptions,
+      age: s.age, weight: s.weight, height: s.height,
+      decAge: () => this.adjustAge(-1), incAge: () => this.adjustAge(1),
+      decWeight: () => this.adjustWeight(-1), incWeight: () => this.adjustWeight(1),
+      decHeight: () => this.adjustHeight(-1), incHeight: () => this.adjustHeight(1),
+      bmiDisplay, bmiCategoryLabel: cat.label,
+      bmiBadgeStyle: `padding:6px 12px; border-radius:10px; font-size:13px; font-weight:700; background:${cat.color}22; color:${cat.color};`,
+      bmiMarkerStyle: `position:absolute; top:-3px; left:${markerLeft}%; width:3px; height:14px; background:#fff; border-radius:2px; transform:translateX(-50%); box-shadow:0 0 0 2px rgba(0,0,0,0.4);`,
+      primaryBtnLabel, primaryAction,
+      primaryBtnStyle: `text-align:center; padding:17px; border-radius:16px; font-weight:700; font-size:16px; cursor:pointer; background:${primaryDisabled ? '#262B31' : '#FF6A2B'}; color:${primaryDisabled ? '#5B636D' : '#0B0D10'};`,
+      tdee,
+      genderLabel: GENDER_LABELS[s.gender] || '-', locationLabel: LOCATION_LABELS[s.location] || '-',
+      todayShort: DAYS[todayIndex()], todayTitle: WEEKLY_PLAN[todayIndex()].title,
+      todayCountText: WEEKLY_PLAN[todayIndex()].rest ? 'วันพักผ่อน' : `${WEEKLY_PLAN[todayIndex()].exIds.length} ท่าออกกำลังกาย`,
+      goPlanTab: () => this.setTab('plan'),
+      tabIsHome: s.tab === 'home', tabIsPlan: s.tab === 'plan', tabIsMoves: s.tab === 'moves',
+      tabIsFood: s.tab === 'food', tabIsProfile: s.tab === 'profile', tabIsProgress: s.tab === 'progress',
+      streakText: `${streak} วัน`, weekDoneText: `${weekDoneCount}/${workoutDaysTotal} วัน`,
+      weekDots, chartBars, prList, logWeightToday: () => this.logWeightToday(),
+      predictedWeight, forecastColor, forecastChangeText,
+      dayPills, locationPills,
+      currentDayTitle: `${DAYS[s.day]} · ${dayPlan.title}`,
+      currentDayIsRest: dayPlan.rest, currentDayHasExercises: !dayPlan.rest,
+      currentDayExercises,
+      dayProgressText: `${doneCount}/${currentDayExercises.length} ท่าเสร็จแล้ว`,
+      dayProgressBarStyle: `height:100%; width:${dayProgressPct}%; background:#B6FF3B; border-radius:4px;`,
+      moveCategories, filteredMoves,
+      mealsForDay, mealTotalKcal,
+      mealProgressBarStyle: `height:100%; width:${mealPct}%; background:#FF6A2B; border-radius:4px;`,
+      tabs,
+      hasSelectedExercise: !!sel, selectedExercise, closeExercise: () => this.closeExercise(),
+      profileRows, startEdit: () => this.startEdit(), resetProfile: () => this.resetProfile(),
+    };
+  }
+}
+
+</script>
+</body>
+</html>
